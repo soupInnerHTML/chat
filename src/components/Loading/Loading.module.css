@@ -1,0 +1,14 @@
+.loading {
+    transition: .5s transform;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    background: #f2f3f4;
+    z-index: 1000;
+    padding: 5px;
+;
+}
+.hidden {
+    transform: translateY(-100%);
+}
