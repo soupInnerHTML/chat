@@ -12,7 +12,8 @@ import {
     VirtuosoMessageListMethods,
 } from "@virtuoso.dev/message-list";
 import {useMessagesQuery} from "../../graphql/hooks/useMessagesQuery.ts";
-import usePrevious from "../../graphql/hooks/usePrevious.ts";
+import usePrevious from "../../hooks/usePrevious.ts";
+import {ChatInput} from "./ChatInput";
 
 export const Chat: React.FC = () => {
     const {
@@ -68,15 +69,7 @@ export const Chat: React.FC = () => {
                     />
                 </VirtuosoMessageListLicense>
             </div>
-            <form onSubmit={e => e.preventDefault()} className={css.footer}>
-                <input
-                    required
-                    type="text"
-                    className={css.textInput}
-                    placeholder="Message text"
-                />
-                <button>Send</button>
-            </form>
+            <ChatInput />
         </div>
     );
 };
