@@ -1,10 +1,8 @@
 import React, {useCallback, useEffect, useRef} from "react";
 import {Message as TMessage,} from "../../../__generated__/resolvers-types.ts";
 import css from "./Chat.module.css";
-import {ApolloError} from "@apollo/client";
 import {Message} from "./Message";
 import {Loading} from "../Loading";
-import {ErrorToast} from '../ErrorToast'
 import {
     ListScrollLocation,
     VirtuosoMessageList,
@@ -21,8 +19,6 @@ import {differenceBy} from "lodash-es";
 export const Chat: React.FC = () => {
     const {
         loading,
-        error,
-        setError,
         messages,
         loadMoreMessages,
         pageInfo
@@ -47,7 +43,7 @@ export const Chat: React.FC = () => {
     }, [updatedMessage?.id, updatedMessage?.status])
 
     useEffect(() => {
-        if(messageListRef.current && messages.length && !loading && !error) {
+        if(messageListRef.current && messages.length && !loading) {
             requestAnimationFrame(() => {
                 const batch = differenceBy(messages, messageListRef.current!.data.get(), "id")
                 if(batch.length) {
@@ -60,14 +56,9 @@ export const Chat: React.FC = () => {
 
     const onScroll = useCallback(
         async (location: ListScrollLocation) => {
-            try {
-                // offset is 0 at the top, -totalScrollSize + viewportHeight at the bottom
-                if (location.listOffset > -100 && pageInfo?.hasPreviousPage && !loading) {
-                    loadMoreMessages(pageInfo.startCursor)
-                }
-            }
-            catch (e) {
-                setError((e as ApolloError).message)
+            // offset is 0 at the top, -totalScrollSize + viewportHeight at the bottom
+            if (location.listOffset > -100 && pageInfo?.hasPreviousPage && !loading) {
+                loadMoreMessages(pageInfo.startCursor)
             }
         },
         [loading, pageInfo?.hasPreviousPage]
@@ -75,7 +66,6 @@ export const Chat: React.FC = () => {
 
     return (
         <div className={css.root}>
-            <ErrorToast error={error} />
             <div className={css.container}>
                 <Loading loading={loading} />
                 <VirtuosoMessageListLicense licenseKey="">

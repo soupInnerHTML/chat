@@ -9,7 +9,6 @@
 }
 .messageText {
     overflow-wrap: break-word;
-    text-align: left;
     display: inline-block;
     width: 100%;
 }

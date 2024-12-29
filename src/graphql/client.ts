@@ -3,12 +3,11 @@ import {GraphQLWsLink} from "@apollo/client/link/subscriptions";
 import {getMainDefinition} from "@apollo/client/utilities";
 import {createClient} from "graphql-ws";
 import {LocalStorageWrapper, persistCache} from "apollo3-cache-persist";
-import {
-    handleRecurringCustomerMessagesLink
-} from "../utils/links/handleRecurringCustomerMessages.ts";
+import {handleRecurringCustomerMessagesLink} from "../utils/links/handleRecurringCustomerMessages.ts";
 import {readActualMessages} from "../utils/readActualMessages.ts";
 import {mergeMessageCache} from "../utils/mergeMessageCache.ts";
 import {chain} from "../utils/links/chain.ts";
+import {errorLink} from "../utils/links/errorLink.ts";
 
 const PORT = 4000;
 
@@ -26,6 +25,7 @@ const wsLink = new GraphQLWsLink(
 const link = ApolloLink.from([
     handleRecurringCustomerMessagesLink(),
     chain(),
+    errorLink,
     split(
       ({ query }) => {
         const definition = getMainDefinition(query);
