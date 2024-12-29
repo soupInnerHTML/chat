@@ -1,14 +1,12 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import './utils/consoleErrorDevExclude.ts'
+import {StrictMode} from "react";
+import {createRoot} from "react-dom/client";
 import "./index.css";
-import { Chat } from "./components";
-import { ApolloProvider } from "@apollo/client";
-import { client } from "./graphql/client.ts";
+import {App} from "./components/App.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ApolloProvider client={client}>
-      <Chat />
-    </ApolloProvider>
+      <App />
   </StrictMode>
 );
+

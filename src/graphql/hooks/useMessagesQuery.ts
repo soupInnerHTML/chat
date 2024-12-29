@@ -16,9 +16,11 @@ export function useMessagesQuery() {
         skip: !totalMessagesCount,
         notifyOnNetworkStatusChange: true,
         onError: e => setError(e.message),
+        fetchPolicy: 'cache-first',
     });
 
-    const messages = useMemo(() => getMessages(data), [loading]);
+    // TODO fix: use chain
+    const messages = useMemo(() => getMessages(data), [data]);
 
     const loadMoreMessages = async (startCursor: number) => {
         try {
@@ -34,7 +36,15 @@ export function useMessagesQuery() {
                     return {
                         messages: {
                             ...fetchMoreResult.messages,
-                            edges: fetchMoreResult.messages.edges
+                            edges: [
+                                ...fetchMoreResult.messages.edges,
+                                ...previousQueryResult.messages.edges,
+                            ],
+                            pageInfo: {
+                                ...fetchMoreResult.messages.pageInfo,
+                                endCursor: previousQueryResult.messages.pageInfo.endCursor,
+                                startCursor: fetchMoreResult.messages.pageInfo.startCursor,
+                            },
                         },
                     };
                 },

@@ -3,7 +3,14 @@ import {SEND_MESSAGE} from "../queries/sendMessage.ts";
 import {Mutation} from "../../../__generated__/resolvers-types.ts";
 
 export const useSendMessageMutation = () => {
-    const [sendMessage, { loading, error, data }] = useMutation<Mutation>(SEND_MESSAGE);
+    const [sendMessage, { loading, error, data }] = useMutation<Mutation>(SEND_MESSAGE, {
+        fetchPolicy: 'no-cache',
+    });
 
-    return {sendMessage, loading, error, data};
+    return {
+        sendMessage: (text: string) => sendMessage({variables: {text}}),
+        loading,
+        error,
+        data
+    };
 }

@@ -1,31 +1,38 @@
-import css from "../Chat.module.css";
+import css from "./ChatInput.module.css";
 import {useSendMessageMutation} from "../../../graphql/hooks/useSendMessageMutation.ts";
-import {FormEventHandler, useState} from "react";
+import React, {FormEventHandler, memo, useState} from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 
-export const ChatInput = () => {
-    const {sendMessage, loading} = useSendMessageMutation()
-    const [messageText, setMessageText] = useState<string>("");
+export const ChatInput: React.FC = memo(() => {
+    const {sendMessage} = useSendMessageMutation()
+    const [messageText, setMessageText] = useState("");
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
-        await sendMessage({variables: {text: messageText}});
         setMessageText("")
+        await sendMessage(messageText);
     }
 
-    const disabled = loading || !messageText.trim()
+    const disabled = !messageText.trim()
 
     return (
-        <form onSubmit={onSubmit} className={css.footer}>
+        <form onSubmit={onSubmit} className={css.sendForm}>
             <input
-                title="Please enter a valid message. It cannot be empty or consist only of spaces."
                 type="text"
                 value={messageText}
                 onChange={(e) => setMessageText(e.target.value)}
                 className={css.textInput}
                 placeholder="Message text"
             />
-            <button disabled={disabled}>Send</button>
+            <button
+                type={"submit"}
+                disabled={disabled}
+                className={css.sendButton}
+            >
+                <FontAwesomeIcon icon={faPaperPlane} />
+            </button>
         </form>
     );
-};
+});
 

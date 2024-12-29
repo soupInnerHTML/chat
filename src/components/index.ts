@@ -1,1 +1,1 @@
-export {Chat} from './Chat/Chat.tsx'
+export {Chat} from './Chat'

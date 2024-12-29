@@ -1,7 +1,14 @@
-import { ApolloClient, HttpLink, split, InMemoryCache } from "@apollo/client";
-import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
-import { getMainDefinition } from "@apollo/client/utilities";
-import { createClient } from "graphql-ws";
+import {ApolloClient, ApolloLink, HttpLink, InMemoryCache, split} from "@apollo/client";
+import {GraphQLWsLink} from "@apollo/client/link/subscriptions";
+import {getMainDefinition} from "@apollo/client/utilities";
+import {createClient} from "graphql-ws";
+import {LocalStorageWrapper, persistCache} from "apollo3-cache-persist";
+import {
+    handleRecurringCustomerMessagesLink
+} from "../utils/links/handleRecurringCustomerMessages.ts";
+import {readActualMessages} from "../utils/readActualMessages.ts";
+import {mergeMessageCache} from "../utils/mergeMessageCache.ts";
+import {chain} from "../utils/links/chain.ts";
 
 const PORT = 4000;
 
@@ -16,21 +23,51 @@ const wsLink = new GraphQLWsLink(
   })
 );
 
-const link = split(
-  ({ query }) => {
-    const definition = getMainDefinition(query);
-    return (
-      definition.kind === "OperationDefinition" &&
-      definition.operation === "subscription"
-    );
-  },
-  wsLink,
-  httpLink
-);
+const link = ApolloLink.from([
+    handleRecurringCustomerMessagesLink(),
+    chain(),
+    split(
+      ({ query }) => {
+        const definition = getMainDefinition(query);
+        return (
+          definition.kind === "OperationDefinition" &&
+          definition.operation === "subscription"
+        );
+      },
+      wsLink,
+      httpLink
+    )
+]);
 
-const cache = new InMemoryCache({});
+export const createApolloClient = async () => {
 
-export const client = new ApolloClient({
-  link,
-  cache,
-});
+    const cache = new InMemoryCache();
+
+    await persistCache({
+        cache,
+        storage: new LocalStorageWrapper(window.localStorage),
+    })
+
+    cache.policies.addTypePolicies({
+        Query: {
+            fields: {
+                messages: {
+                    keyArgs: false,
+                    read(existing, {cache}) {
+                        return readActualMessages(existing, cache)
+                    }
+                },
+            },
+        },
+        Message: {
+            merge(_, incoming, {readField, cache}) {
+                return mergeMessageCache(incoming, readField, cache)
+            },
+        },
+    })
+
+    return new ApolloClient({
+        link,
+        cache,
+    });
+};

@@ -1,0 +1,24 @@
+:root {
+    --chat-footer-height: 67px;
+    --send-form-controls-height: 34px
+}
+
+.sendForm {
+    border-top: 1px solid #e4e5ea;
+    display: flex;
+    padding: 0 16px;
+    gap: 16px;
+    box-sizing: border-box;
+    height: var(--chat-footer-height);
+    align-items: center;
+}
+
+.textInput {
+    flex: auto;
+    height: var(--send-form-controls-height);
+    box-sizing: border-box;
+}
+
+.sendButton {
+    height: var(--send-form-controls-height);
+}
