@@ -1,10 +1,10 @@
 import {useMessagesCountQuery} from "./useMessagesCountQuery.ts";
 import {useQuery} from "@apollo/client";
 import {Query} from "../../../__generated__/resolvers-types.ts";
-import {GET_MESSAGES} from "../queries/getMessages.ts";
-import {MESSAGES_LIMIT} from "../constants.ts";
+import {GET_MESSAGES} from "../queries";
+import {MESSAGES_LIMIT} from "../params.ts";
 import {useMemo} from "react";
-import {getMessages} from "../../utils/getMessages.ts";
+import {getMessages} from "../../utils";
 import {debounce} from "lodash-es";
 
 export function useMessagesQuery() {
@@ -16,11 +16,11 @@ export function useMessagesQuery() {
         fetchPolicy: 'cache-first',
     });
 
-    // TODO fix: use chain
-    const messages = useMemo(() => getMessages(data), [data]);
+    const messagesLength = data?.messages.edges.length ?? 0
+    const messages = useMemo(() => getMessages(data), [messagesLength]);
 
-    const loadMoreMessages = async (startCursor: number) => {
-        await fetchMore({
+    const loadMoreMessages = (startCursor: number) => {
+        fetchMore({
             variables: {
                 after: String(startCursor - MESSAGES_LIMIT - 1),
                 first: Math.min(MESSAGES_LIMIT, startCursor)
@@ -46,10 +46,11 @@ export function useMessagesQuery() {
         });
     };
 
-    const loadMoreMessagesDebounced = useMemo(() => debounce((startCursor) => {
-        loadMoreMessages(startCursor)
-    }, 50), [])
-
+    const loadMoreMessagesDebounced = useMemo(() => (
+        debounce((startCursor) => {
+            loadMoreMessages(startCursor)
+        }, 50)
+    ), [])
 
     return {
         loading: loading || !messages.length,

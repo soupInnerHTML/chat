@@ -1,8 +1,8 @@
 import {useApolloClient, useSubscription} from "@apollo/client";
-import {MESSAGE_ADDED_SUBSCRIPTION} from "../queries/messageSubscription.ts";
+import {MESSAGE_ADDED_SUBSCRIPTION} from "../queries";
 import {Message, Subscription} from "../../../__generated__/resolvers-types.ts";
 import {useState} from "react";
-import {getServerId} from "../../utils/getServerId.ts";
+import {getServerId} from "../../utils";
 
 export const useMessageAddedSubscription = () => {
     const [newMessage, setNewMessage] = useState<Message | undefined>();
@@ -21,7 +21,7 @@ export const useMessageAddedSubscription = () => {
                             const newEdge = {
                                 __typename: "MessageEdge",
                                 node: newMessage,
-                                cursor: getServerId(data.messageAdded.id)
+                                cursor: getServerId(newMessage.id)
                             };
 
                             return {

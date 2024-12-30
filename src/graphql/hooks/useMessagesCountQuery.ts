@@ -1,5 +1,5 @@
 import {useQuery} from "@apollo/client";
-import {GET_MESSAGES_COUNT} from "../queries/getMessages.ts";
+import {GET_MESSAGES_COUNT} from "../queries";
 import {Query} from "../../../__generated__/resolvers-types.ts";
 
 export const useMessagesCountQuery = () => {

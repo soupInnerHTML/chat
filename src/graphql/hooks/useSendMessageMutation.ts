@@ -1,5 +1,5 @@
 import {useMutation} from "@apollo/client";
-import {SEND_MESSAGE} from "../queries/sendMessage.ts";
+import {SEND_MESSAGE} from "../queries";
 import {Mutation} from "../../../__generated__/resolvers-types.ts";
 
 export const useSendMessageMutation = () => {

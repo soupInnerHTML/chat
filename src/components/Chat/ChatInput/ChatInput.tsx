@@ -1,5 +1,5 @@
 import css from "./ChatInput.module.css";
-import {useSendMessageMutation} from "../../../graphql/hooks/useSendMessageMutation.ts";
+import {useSendMessageMutation} from "../../../graphql/hooks";
 import React, {FormEventHandler, memo, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
@@ -8,10 +8,10 @@ export const ChatInput: React.FC = memo(() => {
     const {sendMessage} = useSendMessageMutation()
     const [messageText, setMessageText] = useState("");
 
-    const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
         setMessageText("")
-        await sendMessage(messageText);
+        sendMessage(messageText);
     }
 
     const disabled = !messageText.trim()

@@ -1,12 +1,12 @@
 import cn from "clsx";
 import {MessageSender, MessageStatus,} from "../../../../__generated__/resolvers-types.ts";
 import css from "./Message.module.css";
-import {VirtuosoMessageProps} from "../../../types/virtuoso.ts";
+import {MessageProps} from "../../../types/messageList.ts";
 import { FontAwesomeIcon as StatusIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCheckDouble } from "@fortawesome/free-solid-svg-icons";
 import {useMemo} from "react";
 
-export const Message: VirtuosoMessageProps = ({
+export const Message: MessageProps = ({
     data: {sender, text, status, updatedAt},
 }) => {
     const icon = useMemo(() => {

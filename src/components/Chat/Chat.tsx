@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from "react";
+import React, {memo, useCallback, useEffect, useRef} from "react";
 import {Message as TMessage,} from "../../../__generated__/resolvers-types.ts";
 import css from "./Chat.module.css";
 import {Message} from "./Message";
@@ -9,14 +9,16 @@ import {
     VirtuosoMessageListLicense,
     VirtuosoMessageListMethods,
 } from "@virtuoso.dev/message-list";
-import {useMessagesQuery} from "../../graphql/hooks/useMessagesQuery.ts";
+import {
+    useMessagesQuery,
+    useMessageUpdatedSubscription,
+    useMessageAddedSubscription
+} from "../../graphql/hooks";
 import {ChatInput} from "./ChatInput";
-import {useMessageAddedSubscription} from "../../graphql/hooks/useMessageAddedSubscription.ts";
-import {MessageListContext} from "../../types/virtuoso.ts";
-import {useMessageUpdatedSubscription} from "../../graphql/hooks/useMessageUpdatedSubscription.ts";
+import {MessageListContext} from "../../types/messageList.ts";
 import {differenceBy} from "lodash-es";
 
-export const Chat: React.FC = () => {
+export const Chat: React.FC = memo(() => {
     const {
         loading,
         messages,
@@ -82,4 +84,4 @@ export const Chat: React.FC = () => {
             <ChatInput />
         </div>
     );
-};
+});

@@ -1,5 +1,5 @@
 import {useSubscription} from "@apollo/client";
-import {MESSAGE_UPDATED_SUBSCRIPTION} from "../queries/messageSubscription.ts";
+import {MESSAGE_UPDATED_SUBSCRIPTION} from "../queries";
 import {Message, Subscription} from "../../../__generated__/resolvers-types.ts";
 import {useState} from "react";
 
