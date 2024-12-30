@@ -1,5 +1,4 @@
 import {toast} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import {onError} from "@apollo/client/link/error";
 
 window.onunhandledrejection = (event) => {

@@ -10,8 +10,8 @@ export const ChatInput: React.FC = memo(() => {
 
     const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
-        setMessageText("")
         sendMessage(messageText);
+        setMessageText("")
     }
 
     const disabled = !messageText.trim()

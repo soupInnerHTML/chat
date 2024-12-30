@@ -2,6 +2,7 @@ import {createApolloClient} from "../graphql/client.ts";
 import {ApolloClient, ApolloProvider, NormalizedCacheObject} from "@apollo/client";
 import React, {useEffect, useState} from "react";
 import {Chat} from "./Chat";
+import {ToastContainer} from "react-toastify";
 
 export const App: React.FC = () => {
     const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | null>(null);
@@ -20,6 +21,7 @@ export const App: React.FC = () => {
     return (
         <ApolloProvider client={client}>
             <Chat />
+            <ToastContainer />
         </ApolloProvider>
     )
 }
