@@ -1,19 +1,17 @@
 import {toast} from 'react-toastify';
 import {onError} from "@apollo/client/link/error";
+import {debounce} from "lodash-es";
 
-window.onunhandledrejection = (event) => {
-    event.preventDefault();
-};
-
+const showError = debounce(toast.error, 500)
 export const errorLink = onError(({ networkError, graphQLErrors, forward, operation }) => {
     if (graphQLErrors) {
         graphQLErrors.forEach(({ message, locations, path }) => {
-            toast.error(`Error: Message: ${message}, Location: ${locations}, Path: ${path}`);
+            showError(`Error: Message: ${message}, Location: ${locations}, Path: ${path}`);
         });
     }
 
     if (networkError) {
-        toast.error(`Network error: ${networkError}`);
+        showError(`Network error: ${networkError}`);
     }
 
     return forward(operation);
